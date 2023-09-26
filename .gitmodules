@@ -1,3 +1,6 @@
 [submodule "externals/Higher-Order-Ambisonics"]
 	path = externals/Higher-Order-Ambisonics
 	url = https://github.com/polarch/Higher-Order-Ambisonics.git
+[submodule "externals/ambisonic-pressure-map"]
+	path = externals/ambisonic-pressure-map
+	url = https://github.com/trsonic/ambisonic-pressure-map
