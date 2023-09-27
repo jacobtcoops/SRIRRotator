@@ -1,3 +1,6 @@
+close all
+clear
+
 % Paths for MV4
 MV4_rotatedPath = ['D:\_RESOURCE\MaidaVale-IRs\230925_1-Rotation-Compensated-MV4_5' ...
         '\MV4\AS2\AS2\TOA'];

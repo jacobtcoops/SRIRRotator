@@ -1,0 +1,76 @@
+close all
+clear
+
+% Paths for MV4
+MV4_rotatedPath = ['D:\_RESOURCE\MaidaVale-IRs\230925_1-Rotation-Compensated-MV4_5' ...
+        '\MV4\AS2\AS2\TOA'];
+MV4_convertedPath = ['D:\_RESOURCE\MaidaVale-IRs\230925_2-N3D-All' ...
+        '\MV4\AS2\AS2\TOA'];
+
+% MV4 Conversion
+% SN3DtoN3D(MV4_rotatedPath, MV4_convertedPath);
+
+% if the output file path does not excist, create it (surpress warning)
+mkdir(MV4_convertedPath);
+
+% place all .wav files in struct
+SRIRs = dir(fullfile(MV4_rotatedPath,'*.wav'));
+
+% find length of first SRIR
+length = length(audioread(strcat(MV4_rotatedPath, '\', SRIRs(1).name)));
+
+% % array to hold SRIRs
+N3D = cell(1, numel(SRIRs));
+N3D_Normalised = cell(1, numel(SRIRs));
+
+tic
+
+parfor i = 1:numel(SRIRs)
+
+    % read in SRIR
+    [rawIR, Fs] = audioread(strcat(MV4_rotatedPath, '\', SRIRs(i).name));
+
+    % convert SRIRs from SN3D to N3D
+    N3D{i} = convert_N3D_SN3D(rawIR, 'sn2n');
+
+end
+
+maxima = zeros(1, numel(N3D));
+
+% find maximum peak across all IRs
+for j = 1: numel(N3D)
+
+    % array of maxima across the IRs
+    maxima(j) = max(abs(N3D{j}), [], 'all');
+
+end
+
+maximum = max(maxima);
+
+% normalise IRs relative to the maximum peak across all of them
+for k = 1: numel(N3D)
+
+    N3D_Normalised{k} = 0.99 * N3D{k}./maximum;
+
+end
+
+% write all SRIRs to audio files
+
+for m = 1: numel(N3D)
+
+    % write to file
+    audiowrite( strcat(MV4_convertedPath, '\', SRIRs(m).name), N3D, ...
+                Fs, 'BitsPerSample', 24);
+
+end
+
+toc
+
+% % Paths for MV5
+% MV5_rotatedPath = ['D:\_RESOURCE\MaidaVale-IRs\230925_1-Rotation-Compensated-MV4_5' ...
+%         '\MV5\AS1\AS1\TOA'];
+% MV5_convertedPath = ['D:\_RESOURCE\MaidaVale-IRs\230925_2-N3D-All' ...
+%         '\MV5\AS1\AS1\TOA'];
+% 
+% % MV5 Rotation
+% SN3DtoN3D(MV5_rotatedPath, MV5_convertedPath);

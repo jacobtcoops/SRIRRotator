@@ -3,11 +3,11 @@ function SRIRRotator(inputPath,outputPath, yaw, pitch, roll)
 %   function takes a set of SRIRs, rotates them by the input yaw, pitch and
 %   roll values (in the order given) and saves them
 %   INPUTS
-%       inputFilePath   directory for input SRIRs
-%       outputFilePath  directory for output SRIRs
-%       yaw             yaw rotation (degrees)
-%       pitch           pitch rotation (degrees)
-%       roll            roll rotation (degrees)
+%       inputPath   directory for input SRIRs
+%       outputPath  directory for output SRIRs
+%       yaw         yaw rotation (degrees)
+%       pitch       pitch rotation (degrees)
+%       roll        roll rotation (degrees)
 
     % paths for externals
     HOALibraryPath = 'externals\Higher-Order-Ambisonics';
@@ -26,7 +26,6 @@ function SRIRRotator(inputPath,outputPath, yaw, pitch, roll)
     tic
 
     parfor i = 1:numel(SRIRs)
-    
         % read in SRIR
         [rawIR, Fs] = audioread(strcat(inputPath, '\', SRIRs(i).name));
     
@@ -42,7 +41,6 @@ function SRIRRotator(inputPath,outputPath, yaw, pitch, roll)
         % write to file
         audiowrite( strcat(outputPath, '\', SRIRs(i).name), SN3D, ...
                     Fs, 'BitsPerSample', 24);
-
     end
 
     toc
